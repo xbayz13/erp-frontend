@@ -38,25 +38,10 @@ export function Navigation() {
   ];
 
   return (
-    <nav
-      style={{
-        padding: '1rem 2rem',
-        borderBottom: '1px solid rgba(255,255,255,0.1)',
-        display: 'flex',
-        gap: '1.5rem',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        background: 'rgba(0,0,0,0.2)',
-      }}
-    >
+    <nav className="px-4 md:px-8 py-4 border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm flex items-center gap-4 flex-wrap sticky top-0 z-50">
       <Link
         href="/"
-        style={{
-          fontWeight: 'bold',
-          fontSize: '1.25rem',
-          color: 'var(--accent)',
-          textDecoration: 'none',
-        }}
+        className="font-bold text-xl text-accent hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
       >
         ERP
       </Link>
@@ -64,36 +49,15 @@ export function Navigation() {
         <Link
           key={item.href}
           href={item.href}
-          style={{
-            color: pathname === item.href ? 'var(--accent)' : 'var(--text)',
-            textDecoration: 'none',
-            padding: '0.5rem 1rem',
-            borderRadius: '8px',
-            background:
-              pathname === item.href ? 'rgba(79, 70, 229, 0.1)' : 'transparent',
-            transition: 'all 0.2s',
-            position: 'relative',
-          }}
+          className={`relative px-4 py-2 rounded-lg transition-all ${
+            pathname === item.href
+              ? 'bg-accent/10 text-accent font-medium'
+              : 'text-gray-700 dark:text-text hover:bg-gray-100 dark:hover:bg-surface-muted'
+          }`}
         >
           {item.label}
           {item.href === '/system' && unreadCount > 0 && (
-            <span
-              style={{
-                position: 'absolute',
-                top: '-4px',
-                right: '-4px',
-                background: 'var(--accent)',
-                color: 'white',
-                borderRadius: '50%',
-                width: '20px',
-                height: '20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.75rem',
-                fontWeight: 'bold',
-              }}
-            >
+            <span className="absolute -top-1 -right-1 bg-accent text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
@@ -102,24 +66,7 @@ export function Navigation() {
       {isAuthenticated && (
         <button
           onClick={logout}
-          style={{
-            marginLeft: 'auto',
-            padding: '0.5rem 1rem',
-            borderRadius: '8px',
-            border: '1px solid rgba(255,255,255,0.1)',
-            background: 'transparent',
-            color: 'var(--text)',
-            cursor: 'pointer',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = 'rgba(248, 113, 113, 0.1)';
-            e.currentTarget.style.borderColor = 'rgba(248, 113, 113, 0.3)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = 'transparent';
-            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-          }}
+          className="ml-auto px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent text-gray-700 dark:text-text hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-300 dark:hover:border-red-700 transition-all"
         >
           Logout
         </button>

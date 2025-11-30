@@ -50,57 +50,47 @@ export default function AnalyticsPage() {
   };
 
   return (
-    <main style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <main className="p-4 md:p-8 flex flex-col gap-6 bg-gray-50 dark:bg-background min-h-screen">
       <header>
-        <h1>Advanced Analytics Dashboard</h1>
-        <p className="kpi-label">Comprehensive business intelligence and analytics</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-text mb-2">Advanced Analytics Dashboard</h1>
+        <p className="text-sm text-gray-600 dark:text-text-muted">Comprehensive business intelligence and analytics</p>
       </header>
 
-      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>Start Date</label>
+      <div className="flex gap-4 flex-wrap">
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-gray-700 dark:text-text-muted">Start Date</label>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            style={{
-              padding: '0.5rem',
-              borderRadius: '8px',
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: 'transparent',
-              color: 'var(--text)',
-            }}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-surface-muted text-gray-900 dark:text-text focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors"
           />
         </div>
-        <div>
-          <label style={{ display: 'block', marginBottom: '0.5rem' }}>End Date</label>
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium text-gray-700 dark:text-text-muted">End Date</label>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            style={{
-              padding: '0.5rem',
-              borderRadius: '8px',
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: 'transparent',
-              color: 'var(--text)',
-            }}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-surface-muted text-gray-900 dark:text-text focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-colors"
           />
         </div>
       </div>
 
       {dashboardState.loading ? (
-        <p className="kpi-label">Loading analytics...</p>
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto mb-4"></div>
+            <p className="text-text-muted">Loading analytics...</p>
+          </div>
+        </div>
       ) : dashboardState.error ? (
-        <span className="status-pill" data-variant="danger">
+        <div className="px-4 py-3 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">
           {dashboardState.error}
-        </span>
+        </div>
       ) : dashboardState.data ? (
         <>
-          <section
-            className="grid"
-            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}
-          >
+          <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {dashboardState.data.metrics.map((metric) => (
               <KpiCard
                 key={metric.label}
@@ -124,22 +114,23 @@ export default function AnalyticsPage() {
             ))}
           </section>
 
-          <section
-            className="grid"
-            style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))' }}
-          >
+          <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {dashboardState.data.charts.map((chart, index) => (
-              <div key={index} className="card">
-                <h3 style={{ marginBottom: '0.5rem' }}>{chart.type} Chart</h3>
-                {chart.type === 'line' && (
-                  <Line data={chart.data} options={chart.config} />
-                )}
-                {chart.type === 'bar' && (
-                  <Bar data={chart.data} options={chart.config} />
-                )}
-                {chart.type === 'doughnut' && (
-                  <Doughnut data={chart.data} options={chart.config} />
-                )}
+              <div key={index} className="card bg-white dark:bg-surface rounded-xl shadow-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-text mb-4 capitalize">
+                  {chart.type} Chart
+                </h3>
+                <div className="h-64">
+                  {chart.type === 'line' && (
+                    <Line data={chart.data} options={chart.config} />
+                  )}
+                  {chart.type === 'bar' && (
+                    <Bar data={chart.data} options={chart.config} />
+                  )}
+                  {chart.type === 'doughnut' && (
+                    <Doughnut data={chart.data} options={chart.config} />
+                  )}
+                </div>
               </div>
             ))}
           </section>

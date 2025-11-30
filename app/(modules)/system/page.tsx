@@ -13,11 +13,13 @@ import { DataTable } from '../../../components/DataTable';
 import { StatusPill } from '../../../components/StatusPill';
 import { WorkflowManager } from '../../../components/WorkflowManager';
 import { TwoFactorAuth } from '../../../components/TwoFactorAuth';
+import { useTheme } from '../../../lib/contexts/theme-context';
 
 export default function SystemPage() {
   const [activeTab, setActiveTab] = useState<
-    'notifications' | 'documents' | 'sessions' | 'import-export' | 'i18n' | 'integrations' | 'workflows' | '2fa'
+    'notifications' | 'documents' | 'sessions' | 'import-export' | 'i18n' | 'integrations' | 'workflows' | '2fa' | 'settings'
   >('notifications');
+  const { theme, toggleTheme, setTheme } = useTheme();
   const [refreshSeed, setRefreshSeed] = useState(0);
 
   const notificationsState = useAsyncData(
@@ -99,29 +101,26 @@ export default function SystemPage() {
     { id: 'integrations' as const, label: 'Integrations' },
     { id: 'workflows' as const, label: 'Workflows' },
     { id: '2fa' as const, label: '2FA' },
+    { id: 'settings' as const, label: 'Settings' },
   ];
 
   return (
-    <main style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <main className="p-4 md:p-8 flex flex-col gap-6 bg-gray-50 dark:bg-background min-h-screen">
       <header>
-        <h1>System Management</h1>
-        <p className="kpi-label">Manage system settings, notifications, and integrations</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-text mb-2">System Management</h1>
+        <p className="text-sm text-gray-600 dark:text-text-muted">Manage system settings, notifications, and integrations</p>
       </header>
 
-      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+      <div className="flex gap-2 flex-wrap border-b border-gray-200 dark:border-gray-700 overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            style={{
-              padding: '0.75rem 1.5rem',
-              border: 'none',
-              borderBottom: activeTab === tab.id ? '2px solid var(--accent)' : '2px solid transparent',
-              background: 'transparent',
-              color: 'var(--text)',
-              cursor: 'pointer',
-              fontWeight: activeTab === tab.id ? '600' : '400',
-            }}
+            className={`px-4 py-3 border-b-2 transition-colors ${
+              activeTab === tab.id
+                ? 'border-accent text-accent font-semibold'
+                : 'border-transparent text-gray-600 dark:text-text-muted hover:text-gray-900 dark:hover:text-text'
+            }`}
           >
             {tab.label}
           </button>
@@ -286,6 +285,75 @@ export default function SystemPage() {
       )}
 
       {activeTab === '2fa' && <TwoFactorAuth />}
+
+      {activeTab === 'settings' && (
+        <div className="card flex flex-col gap-6">
+          <div>
+            <h2 className="text-2xl font-bold mb-2 text-text">Preferences</h2>
+            <p className="text-sm text-text-muted">Manage your application preferences</p>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-muted">
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-semibold text-text">Theme</label>
+                <p className="text-xs text-text-muted">Choose between light and dark mode</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setTheme('light')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    theme === 'light'
+                      ? 'bg-accent text-white'
+                      : 'bg-gray-100 dark:bg-surface text-gray-700 dark:text-text hover:bg-gray-200 dark:hover:bg-surface-muted'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    Light
+                  </div>
+                </button>
+                <button
+                  onClick={() => setTheme('dark')}
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    theme === 'dark'
+                      ? 'bg-accent text-white'
+                      : 'bg-gray-100 dark:bg-surface text-gray-700 dark:text-text hover:bg-gray-200 dark:hover:bg-surface-muted'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    Dark
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-surface-muted">
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-semibold text-text">Quick Toggle</label>
+                <p className="text-xs text-text-muted">Toggle between light and dark mode</p>
+              </div>
+              <button
+                onClick={toggleTheme}
+                className="relative inline-flex h-6 w-11 items-center rounded-full bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                role="switch"
+                aria-checked={theme === 'dark'}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    theme === 'dark' ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

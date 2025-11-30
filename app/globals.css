@@ -1,4 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
+  --background: #0e1116;
+  --surface: #161b22;
+  --surface-muted: #1f2530;
+  --text: #e6edf3;
+  --text-muted: #9caec2;
+  --accent: #4f46e5;
+}
+
+.dark {
   --background: #0e1116;
   --surface: #161b22;
   --surface-muted: #1f2530;

@@ -22,15 +22,11 @@ export default function LoginPage() {
 
   if (isLoading) {
     return (
-      <main
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <p className="kpi-label">Loading...</p>
+      <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto mb-4"></div>
+          <p className="text-text-muted">Loading...</p>
+        </div>
       </main>
     );
   }
@@ -40,19 +36,14 @@ export default function LoginPage() {
   }
 
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <div className="card">
-        <h2>Masuk ke ERP</h2>
-        <p className="kpi-label">
-          Gunakan akun demo yang sudah tersedia untuk mencoba dashboard.
-        </p>
+    <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-background p-4">
+      <div className="card w-full max-w-md bg-white dark:bg-surface rounded-xl shadow-lg p-8">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-text mb-2">Masuk ke ERP</h2>
+          <p className="text-sm text-gray-600 dark:text-text-muted">
+            Gunakan akun demo yang sudah tersedia untuk mencoba dashboard.
+          </p>
+        </div>
         <LoginPanel onAuthenticated={handleAuthenticated} />
       </div>
     </main>

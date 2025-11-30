@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Navigation } from '../components/Navigation';
-import { AuthGuard } from '../components/AuthGuard';
+import { ThemeProvider } from '../lib/contexts/theme-context';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,10 +15,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Navigation />
-        {children}
+        <ThemeProvider>
+          <Navigation />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
