@@ -26,6 +26,11 @@ export function Navigation() {
     }
   }, [unreadCountState.data]);
 
+  // Hide navigation on login page (after all hooks are called)
+  if (pathname === '/login') {
+    return null;
+  }
+
   const navItems = [
     { href: '/', label: 'Dashboard' },
     { href: '/inventory', label: 'Inventory' },
