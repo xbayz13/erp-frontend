@@ -31,12 +31,22 @@ export default function AnalyticsPage() {
   }, []);
 
   const formatMetric = (metric: AnalyticsMetric) => {
-    if (metric.value >= 1000000) {
-      return `Rp ${(metric.value / 1000000).toFixed(2)}M`;
-    } else if (metric.value >= 1000) {
-      return `Rp ${(metric.value / 1000).toFixed(2)}K`;
+    // Handle null/undefined values
+    if (metric.value === null || metric.value === undefined) {
+      return 'Rp 0';
     }
-    return `Rp ${metric.value.toLocaleString('id-ID')}`;
+    
+    const value = Number(metric.value);
+    if (isNaN(value)) {
+      return 'Rp 0';
+    }
+    
+    if (value >= 1000000) {
+      return `Rp ${(value / 1000000).toFixed(2)}M`;
+    } else if (value >= 1000) {
+      return `Rp ${(value / 1000).toFixed(2)}K`;
+    }
+    return `Rp ${value.toLocaleString('id-ID')}`;
   };
 
   return (
@@ -97,7 +107,9 @@ export default function AnalyticsPage() {
                 label={metric.label}
                 value={formatMetric(metric)}
                 trend={
-                  metric.changePercentage !== undefined
+                  metric.changePercentage !== undefined && 
+                  metric.changePercentage !== null &&
+                  !isNaN(metric.changePercentage)
                     ? `${metric.changePercentage > 0 ? '+' : ''}${metric.changePercentage.toFixed(1)}%`
                     : undefined
                 }

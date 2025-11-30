@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Navigation } from '../components/Navigation';
+import { AuthGuard } from '../components/AuthGuard';
 
 const inter = Inter({ subsets: ['latin'] });
 

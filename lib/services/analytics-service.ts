@@ -2,9 +2,9 @@ import { ApiClient } from './api-client';
 
 export interface AnalyticsMetric {
   label: string;
-  value: number;
-  previousValue?: number;
-  changePercentage?: number;
+  value: number | null;
+  previousValue?: number | null;
+  changePercentage?: number | null;
   trend?: 'up' | 'down' | 'stable';
 }
 

@@ -8,8 +8,8 @@ interface LoginPanelProps {
 }
 
 export function LoginPanel({ onAuthenticated }: LoginPanelProps) {
-  const [email, setEmail] = useState('admin@erp.local');
-  const [password, setPassword] = useState('Admin123!');
+  const [email, setEmail] = useState('admin@erp.com');
+  const [password, setPassword] = useState('password123');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

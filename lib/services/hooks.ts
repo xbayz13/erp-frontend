@@ -6,17 +6,27 @@ interface AsyncState<T> {
   error: string | null;
 }
 
+interface UseAsyncDataOptions {
+  skip?: boolean;
+}
+
 export function useAsyncData<T>(
   factory: () => Promise<T>,
   deps: DependencyList = [],
+  options?: UseAsyncDataOptions,
 ): AsyncState<T> {
   const [state, setState] = useState<AsyncState<T>>({
     data: null,
-    loading: true,
+    loading: !options?.skip,
     error: null,
   });
 
   useEffect(() => {
+    if (options?.skip) {
+      setState({ data: null, loading: false, error: null });
+      return;
+    }
+
     let isMounted = true;
     setState((current) => ({ ...current, loading: true, error: null }));
 
@@ -38,7 +48,7 @@ export function useAsyncData<T>(
       isMounted = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [...deps, options?.skip]);
 
   return state;
 }

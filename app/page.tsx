@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DataTable } from '../components/DataTable';
 import { KpiCard } from '../components/KpiCard';
-import { LoginPanel } from '../components/LoginPanel';
 import { StatusPill } from '../components/StatusPill';
+import { AuthGuard } from '../components/AuthGuard';
 import { useAsyncData } from '../lib/services/hooks';
 import { useRealtime } from '../lib/hooks/use-realtime';
 import { Bar, Doughnut } from 'react-chartjs-2';
@@ -57,27 +57,6 @@ export default function DashboardPage() {
     }
   }, [realtimeSnapshot]);
 
-  const needsAuthentication = useMemo(() => {
-    const relevantErrors = [
-      snapshotState.error,
-      inventoryState.error,
-      purchaseOrderState.error,
-      invoiceState.error,
-    ].filter((value): value is string => Boolean(value));
-
-    return relevantErrors.some((error) => {
-      const normalized = error.toLowerCase();
-      return normalized.includes('forbidden') || normalized.includes('auth');
-    });
-  }, [
-    snapshotState.error,
-    inventoryState.error,
-    purchaseOrderState.error,
-    invoiceState.error,
-  ]);
-
-  const handleAuthenticated = () =>
-    setRefreshSeed((current) => current + 1);
 
   const inventoryChartData = useMemo(() => {
     if (!inventoryState.data || inventoryState.data.length === 0) {
@@ -199,28 +178,8 @@ export default function DashboardPage() {
     [],
   );
 
-  if (needsAuthentication) {
-    return (
-      <main
-        style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div className="card">
-          <h2>Masuk ke ERP</h2>
-          <p className="kpi-label">
-            Gunakan akun demo yang sudah tersedia untuk mencoba dashboard.
-          </p>
-          <LoginPanel onAuthenticated={handleAuthenticated} />
-        </div>
-      </main>
-    );
-  }
-
   return (
+    <AuthGuard>
     <main style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
@@ -424,7 +383,8 @@ export default function DashboardPage() {
           ]}
         />
       </section>
-    </main>
+      </main>
+    </AuthGuard>
   );
 }
 

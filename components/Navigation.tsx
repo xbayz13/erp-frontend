@@ -5,19 +5,24 @@ import { usePathname } from 'next/navigation';
 import { systemService } from '../lib/services/service-registry';
 import { useEffect, useState } from 'react';
 import { useAsyncData } from '../lib/services/hooks';
+import { useAuth } from '../lib/hooks/use-auth';
 
 export function Navigation() {
   const pathname = usePathname();
   const [unreadCount, setUnreadCount] = useState(0);
+  const { isAuthenticated, logout } = useAuth();
 
   const unreadCountState = useAsyncData(
     () => systemService.getUnreadCount(),
-    [],
+    [isAuthenticated], // Re-fetch when auth state changes
+    { skip: !isAuthenticated }, // Skip if not authenticated
   );
 
   useEffect(() => {
     if (unreadCountState.data) {
       setUnreadCount(unreadCountState.data.count);
+    } else {
+      setUnreadCount(0);
     }
   }, [unreadCountState.data]);
 
@@ -94,6 +99,31 @@ export function Navigation() {
           )}
         </Link>
       ))}
+      {isAuthenticated && (
+        <button
+          onClick={logout}
+          style={{
+            marginLeft: 'auto',
+            padding: '0.5rem 1rem',
+            borderRadius: '8px',
+            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'transparent',
+            color: 'var(--text)',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(248, 113, 113, 0.1)';
+            e.currentTarget.style.borderColor = 'rgba(248, 113, 113, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent';
+            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+          }}
+        >
+          Logout
+        </button>
+      )}
     </nav>
   );
 }
